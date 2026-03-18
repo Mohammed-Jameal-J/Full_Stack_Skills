@@ -1,11 +1,22 @@
-"use client"
+"use client";
 
-import { useActionState } from "react";
+import { useActionState, useEffect } from "react";
+import { useRouter } from "next/navigation";
 import { signup } from "@/app/actions/register";
 import Link from "next/link";
 
 export default function RegisterPage() {
+  const router = useRouter();
   const [state, formAction, isPending] = useActionState(signup, {});
+
+  useEffect(() => {
+    if (state.success) {
+      const timer = setTimeout(() => {
+        router.push("/login");
+      }, 2000);
+      return () => clearTimeout(timer);
+    }
+  }, [state.success, router]);
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gray-50 py-12 px-4 sm:px-6 lg:px-8">
@@ -18,7 +29,9 @@ export default function RegisterPage() {
 
         {state.success && (
           <div className="rounded-md bg-green-50 p-4">
-            <p className="text-sm font-medium text-green-800">{state.message}</p>
+            <p className="text-sm font-medium text-green-800">
+              {state.message}
+            </p>
           </div>
         )}
 
@@ -31,7 +44,10 @@ export default function RegisterPage() {
         <form className="mt-8 space-y-6" action={formAction}>
           {/* Name Field */}
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="name"
+              className="block text-sm font-medium text-gray-700"
+            >
               Full Name
             </label>
             <input
@@ -49,7 +65,10 @@ export default function RegisterPage() {
 
           {/* Email Field */}
           <div>
-            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="email"
+              className="block text-sm font-medium text-gray-700"
+            >
               Email address
             </label>
             <input
@@ -67,7 +86,10 @@ export default function RegisterPage() {
 
           {/* Password Field */}
           <div>
-            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="password"
+              className="block text-sm font-medium text-gray-700"
+            >
               Password
             </label>
             <input
@@ -79,13 +101,18 @@ export default function RegisterPage() {
               placeholder="••••••••"
             />
             {state.errors?.password && (
-              <p className="mt-1 text-sm text-red-600">{state.errors.password}</p>
+              <p className="mt-1 text-sm text-red-600">
+                {state.errors.password}
+              </p>
             )}
           </div>
 
           {/* Confirm Password Field */}
           <div>
-            <label htmlFor="confirmPassword" className="block text-sm font-medium text-gray-700">
+            <label
+              htmlFor="confirmPassword"
+              className="block text-sm font-medium text-gray-700"
+            >
               Confirm Password
             </label>
             <input
@@ -97,7 +124,9 @@ export default function RegisterPage() {
               placeholder="••••••••"
             />
             {state.errors?.confirmPassword && (
-              <p className="mt-1 text-sm text-red-600">{state.errors.confirmPassword}</p>
+              <p className="mt-1 text-sm text-red-600">
+                {state.errors.confirmPassword}
+              </p>
             )}
           </div>
 
@@ -114,7 +143,10 @@ export default function RegisterPage() {
         {/* Login Link */}
         <p className="mt-2 text-center text-sm text-gray-600">
           Already have an account?{" "}
-          <Link href="/login" className="font-medium text-indigo-600 hover:text-indigo-500">
+          <Link
+            href="/login"
+            className="font-medium text-indigo-600 hover:text-indigo-500"
+          >
             Sign in
           </Link>
         </p>
@@ -122,4 +154,3 @@ export default function RegisterPage() {
     </div>
   );
 }
-
