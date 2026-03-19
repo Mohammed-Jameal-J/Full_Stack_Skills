@@ -3,68 +3,58 @@
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
 import { useSession, signOut } from "next-auth/react";
+import { useEffect, useState } from "react";
 
 export default function TopMenu() {
   const pathname = usePathname();
   const router = useRouter();
   const { data: session, status } = useSession();
+  const [mounted, setMounted] = useState(false);
+
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
   const handleSignOut = async () => {
     await signOut({ redirectTo: "/" });
   };
 
   return (
-    <nav className="bg-white shadow-md">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="flex justify-between h-16">
-          {/* Logo/Brand */}
-          <div className="flex items-center">
-            <Link href="/" className="text-2xl font-bold text-indigo-600">
-              OnlineStore
-            </Link>
-          </div>
+    <div className="navbar bg-primary text-primary-content shadow-lg">
+      <div className="flex-1">
+        <Link href="/" className="btn btn-ghost text-2xl font-bold">
+          🛍️ OnlineStore
+        </Link>
+      </div>
 
-          {/* Navigation Links */}
-          <div className="flex items-center space-x-8">
+      <div className="flex-none gap-4">
+        {mounted ? (
+          <>
             {status === "unauthenticated" ? (
               <>
-                <Link
-                  href="/login"
-                  className={`text-sm font-medium ${
-                    pathname === "/login"
-                      ? "text-indigo-600 border-b-2 border-indigo-600"
-                      : "text-gray-600 hover:text-indigo-600"
-                  }`}
-                >
+                <Link href="/login" className="btn btn-outline btn-sm">
                   Login
                 </Link>
-                <Link
-                  href="/register"
-                  className={`text-sm font-medium ${
-                    pathname === "/register"
-                      ? "text-indigo-600 border-b-2 border-indigo-600"
-                      : "text-gray-600 hover:text-indigo-600"
-                  }`}
-                >
+                <Link href="/register" className="btn btn-outline btn-sm">
                   Register
                 </Link>
               </>
             ) : status === "authenticated" ? (
               <>
-                <span className="text-sm text-gray-600">
-                  Welcome, {session?.user?.name}
+                <span className="text-sm">
+                  Welcome, <strong>{session?.user?.name}</strong>
                 </span>
                 <button
                   onClick={handleSignOut}
-                  className="text-sm font-medium text-gray-600 hover:text-red-600"
+                  className="btn btn-error btn-sm "
                 >
                   Sign Out
                 </button>
               </>
             ) : null}
-          </div>
-        </div>
+          </>
+        ) : null}
       </div>
-    </nav>
+    </div>
   );
 }
