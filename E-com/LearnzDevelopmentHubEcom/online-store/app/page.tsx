@@ -34,7 +34,7 @@ export default async function Home({
       <main className="max-w-7xl mx-auto px-4 py-12">
         <div className="mb-12">
           <h1 className="text-5xl font-bold mb-2 text-base-content">
-            Home
+            Home Page
           </h1>
           <p className="text-base-content/60">Browse our amazing collection</p>
         </div>
